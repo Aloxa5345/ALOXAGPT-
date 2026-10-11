@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AloxaGPT</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Ambient background orbs ── -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+  <canvas id="gridCanvas"></canvas>
+
+  <!-- ───────────── Sidebar ───────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="brand-name">AloxaGPT</span>
+          <span class="brand-tag">v2</span>
+        </div>
+        <button class="icon-btn sidebar-close d-lg-none" id="sidebarClose" aria-label="Close">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <button class="new-chat-btn" id="newChatBtn">
+        <span class="new-chat-icon"><i class="bi bi-plus-lg"></i></span>
+        <span>New conversation</span>
+        <span class="kbd">⌘N</span>
+      </button>
+
+      <div class="history-label">
+        <span>Recents</span>
+        <div class="label-line"></div>
+      </div>
+
+      <ul class="chat-history" id="chatHistory"></ul>
+
+      <div class="sidebar-footer">
+        <div class="footer-actions">
+          <button class="icon-btn" id="themeToggle" title="Toggle theme">
+            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+          </button>
+          <button class="icon-btn" title="Settings">
+            <i class="bi bi-sliders"></i>
+          </button>
+        </div>
+        <div class="user-card">
+          <div class="user-avatar">
+            <i class="bi bi-person-fill"></i>
+            <span class="online-dot"></span>
+          </div>
+          <div class="user-info">
+            <span class="user-name">You</span>
+            <span class="user-plan">
+              <i class="bi bi-lightning-fill"></i> Free Plan
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- ───────────── Main ───────────── -->
+  <main class="main" id="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="icon-btn topbar-menu" id="sidebarToggle" aria-label="Menu">
+        <i class="bi bi-layout-sidebar-inset"></i>
+      </button>
+
+      <div class="topbar-center">
+        <div class="model-pill">
+          <span class="model-dot"></span>
+          <span>Aloxa-1</span>
+          <i class="bi bi-chevron-down ms-1" style="font-size:.65rem;opacity:.6"></i>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button class="icon-btn" title="Share">
+          <i class="bi bi-share"></i>
+        </button>
+        <button class="icon-btn" title="More">
+          <i class="bi bi-three-dots"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Chat area -->
+    <section class="chat-area" id="chatArea">
+
+      <!-- Welcome -->
+      <div class="welcome" id="welcome">
+        <div class="welcome-glow"></div>
+        <div class="welcome-logo">
+          <div class="logo-ring ring-1"></div>
+          <div class="logo-ring ring-2"></div>
+          <div class="logo-ring ring-3"></div>
+          <div class="logo-core">
+            <i class="bi bi-stars"></i>
+          </div>
+        </div>
+        <h1 class="welcome-title">
+          Hi, I'm <span class="grad-text">AloxaGPT</span>
+        </h1>
+        <p class="welcome-sub">Your next-level AI assistant. Ask me anything.</p>
+
+        <div class="suggestion-grid">
+          <button class="suggestion-card" data-prompt="Explain quantum computing in simple terms">
+            <div class="sc-icon"><i class="bi bi-atom"></i></div>
+            <div class="sc-body">
+              <div class="sc-title">Quantum Computing</div>
+              <div class="sc-sub">Explained simply</div>
+            </div>
+          </button>
+          <button class="suggestion-card" data-prompt="Write a Python script to sort a list of dictionaries">
+            <div class="sc-icon"><i class="bi bi-code-slash"></i></div>
+            <div class="sc-body">
+              <div class="sc-title">Python Script</div>
+              <div class="sc-sub">Sort a list of dicts</div>
+            </div>
+          </button>
+          <button class="suggestion-card" data-prompt="Give me 5 productivity tips for remote workers">
+            <div class="sc-icon"><i class="bi bi-rocket-takeoff"></i></div>
+            <div class="sc-body">
+              <div class="sc-title">Productivity Tips</div>
+              <div class="sc-sub">For remote workers</div>
+            </div>
+          </button>
+          <button class="suggestion-card" data-prompt="Write a short creative story about a robot who dreams">
+            <div class="sc-icon"><i class="bi bi-feather"></i></div>
+            <div class="sc-body">
+              <div class="sc-title">Creative Story</div>
+              <div class="sc-sub">Robot who dreams</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages" id="messages"></div>
+
+    </section>
+
+    <!-- Input -->
+    <footer class="input-area">
+      <form class="input-form" id="inputForm" autocomplete="off">
+        <div class="input-shell">
+          <div class="input-glow"></div>
+          <div class="input-box">
+            <textarea
+              class="input-textarea"
+              id="userInput"
+              placeholder="Ask AloxaGPT anything…"
+              rows="1"
+              maxlength="4000"
+              aria-label="Message input"
+            ></textarea>
+            <div class="input-toolbar">
+              <div class="toolbar-left">
+                <button type="button" class="tool-btn" title="Attach">
+                  <i class="bi bi-paperclip"></i>
+                </button>
+                <button type="button" class="tool-btn" title="Image">
+                  <i class="bi bi-image"></i>
+                </button>
+              </div>
+              <div class="toolbar-right">
+                <span class="char-count" id="charCount">0 / 4000</span>
+                <button type="submit" class="send-btn" id="sendBtn" aria-label="Send" disabled>
+                  <i class="bi bi-arrow-up-short"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="input-hint">AloxaGPT may produce inaccurate information. <a href="#">Learn more</a></p>
+      </form>
+    </footer>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
